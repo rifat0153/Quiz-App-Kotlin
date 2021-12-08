@@ -4,6 +4,8 @@ import com.example.quiz_app.common.Constants
 import com.example.quiz_app.feature_quiz.data.remote.QuizApi
 import com.example.quiz_app.feature_quiz.data.repository.QuizRepositoryImpl
 import com.example.quiz_app.feature_quiz.domain.repository.QuizRepository
+import com.example.quiz_app.feature_quiz.domain.usecase.GetQuizUseCase
+import com.example.quiz_app.feature_quiz.domain.usecase.QuizUseCases
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -15,7 +17,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object AppModule  {
 
     @Provides
     @Singleton
@@ -33,6 +35,14 @@ object AppModule {
     @Singleton
     fun providerQuizRepository(api: QuizApi): QuizRepository {
         return QuizRepositoryImpl(api = api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuizUseCase(repository: QuizRepository): QuizUseCases {
+        return QuizUseCases(
+            getQuizUseCase = GetQuizUseCase(repository = repository)
+        )
     }
 
 

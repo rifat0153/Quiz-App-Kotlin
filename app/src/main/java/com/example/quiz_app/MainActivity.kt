@@ -3,23 +3,22 @@ package com.example.quiz_app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.quiz_app.feature_quiz.presentation.quiz.QuizScreen
 import com.example.quiz_app.ui.theme.QuizAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            QuizAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Rifat")
-                }
-            }
+            QuizScreen()
         }
     }
 }
