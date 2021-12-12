@@ -1,6 +1,7 @@
-package com.example.quiz_app.feature_quiz.presentation.quiz
+package com.example.quiz_app.feature_quiz.presentation.question
 
-import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quiz_app.common.Resource
@@ -18,19 +19,21 @@ class QuizViewModel @Inject constructor(
 
     private var job: Job? = null
 
+    private val _state = mutableStateOf<QuestionListState>(QuestionListState.Loading)
+    val state: State<QuestionListState> = _state
+
     init {
         quizUseCases.getQuizUseCase().onEach {
             when (it) {
-                is Resource.Loading -> Log.d("Quiz", "Loading")
+                is Resource.Loading -> _state.value = QuestionListState.Loading
                 is Resource.Success -> {
-                    it.data?.forEach { question ->
-                        Log.d("Quiz", question.question)
-                    }
+                    _state.value = QuestionListState.Success(questionList = it.data ?: emptyList())
                 }
-                is Resource.Error -> Log.d(
-                    "Quiz",
-                    it.message.toString()
-                )
+                is Resource.Error -> {
+                    _state.value = QuestionListState.Error(
+                        error = it.message ?: "Some unexpected error occured"
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
